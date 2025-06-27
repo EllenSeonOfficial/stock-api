@@ -15,25 +15,6 @@ def get_price_from_naver(ticker: str) -> str:
     price_tag = soup.select_one("p.no_today span.blind")
     return int(price_tag.text.replace(",", "").strip()) if price_tag else "N/A"
 
-def get_news_from_naver_mobile(ticker: str):
-    url = f"https://m.stock.naver.com/domestic/stock/{ticker}/news"
-    headers = {"User-Agent": "Mozilla/5.0"}
-    res = requests.get(url, headers=headers)
-    soup = BeautifulSoup(res.text, "html.parser")
-    news_list = []
-    for item in soup.select("ul.NewsList_list__YIK1t li")[:3]:
-        a_tag = item.select_one("a")
-        title_tag = item.select_one("strong")
-        if a_tag and title_tag:
-            news_list.append({
-                "title": title_tag.text.strip(),
-                "url": "https://m.stock.naver.com" + a_tag.get("href")
-            })
-    return news_list
-
-import requests
-from bs4 import BeautifulSoup
-
 def fetch_naver_news(stock_code):
     url = f"https://m.stock.naver.com/domestic/stock/{stock_code}/news"
     headers = {"User-Agent": "Mozilla/5.0"}
