@@ -21,7 +21,7 @@ def get_news_from_naver_mobile(ticker: str):
     res = requests.get(url, headers=headers)
     soup = BeautifulSoup(res.text, "html.parser")
     news_list = []
-    for item in soup.select(".newsList li")[:3]:
+    for item in soup.select("ul.NewsList_list__YIK1t li")[:3]:
         a_tag = item.select_one("a")
         title_tag = item.select_one("strong")
         if a_tag and title_tag:
