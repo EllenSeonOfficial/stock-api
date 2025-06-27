@@ -20,7 +20,7 @@ def get_stock():
     
     try:
         price = soup.select_one("p.no_today span.blind").text.replace(",", "")
-        return jsonify({"price": float(price)})
+        return float(price)
     except:
         return jsonify({"error": "Unable to fetch price"}), 500
 
