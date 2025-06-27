@@ -31,10 +31,41 @@ def get_news_from_naver_mobile(ticker: str):
             })
     return news_list
 
+import requests
+from bs4 import BeautifulSoup
+
+def fetch_naver_news(stock_code):
+    url = f"https://m.stock.naver.com/domestic/stock/{stock_code}/news"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    res = requests.get(url, headers=headers)
+    soup = BeautifulSoup(res.text, "html.parser")
+
+    news_list = []
+
+    for li in soup.select("ul.NewsList_list__YIK1t > li.NewsList_item__rFMSZ"):
+        # 광고 제외
+        if "NewsList_item_ad__vUmaD" in li.get("class", []):
+            continue
+
+        # 링크와 제목 추출
+        link_tag = li.find("a")
+        if not link_tag:
+            continue
+        link = link_tag["href"]
+        title = link_tag.get_text(strip=True)
+
+        news_list.append({
+            "title": title,
+            "url": f"https://m.stock.naver.com{link}"
+        })
+
+    return news_list[:5]  # 상위 5개만 반환
+
+
 @app.get("/stock", response_class=JSONResponse)
 def get_stock(ticker: str = Query(..., description="종목 코드 (예: 005930)")):
     price = get_price_from_naver(ticker)
-    news = get_news_from_naver_mobile(ticker)
+    news = fetch_naver_news(ticker)
     return {
         "ticker": ticker,
         "price": price,
