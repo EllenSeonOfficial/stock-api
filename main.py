@@ -13,7 +13,7 @@ def get_price_from_naver(ticker: str) -> str:
     res = requests.get(url, headers=headers)
     soup = BeautifulSoup(res.text, "html.parser")
     price_tag = soup.select_one("p.no_today span.blind")
-    return price_tag.text.strip() if price_tag else "N/A"
+    return int(price_tag.text.replace(",", "").strip()) if price_tag else "N/A"
 
 def get_news_from_naver_mobile(ticker: str):
     url = f"https://m.stock.naver.com/domestic/stock/{ticker}/news"
