@@ -23,3 +23,8 @@ def get_stock():
         return jsonify({"price": float(price)})
     except:
         return jsonify({"error": "Unable to fetch price"}), 500
+
+if __name__ == '__main__':
+    import os
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
