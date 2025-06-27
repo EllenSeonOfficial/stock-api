@@ -2,6 +2,8 @@ from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
 import requests
 from bs4 import BeautifulSoup
+import uvicorn
+
 
 app = FastAPI()
 
@@ -39,7 +41,10 @@ def get_stock(ticker: str = Query(..., description="종목 코드 (예: 005930)"
         "news": news
     }
 
-if __name__ == '__main__':
-    import os
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host='0.0.0.0', port=port)
+@app.get("/")
+def read_root():
+    return {"message": "Hello, world!"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=10000)
