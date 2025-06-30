@@ -1,4 +1,4 @@
-rom flask import Flask, request, jsonifyMore actions
+from flask import Flask, request, jsonifyMore actions
 import requests
 from bs4 import BeautifulSoup
 
